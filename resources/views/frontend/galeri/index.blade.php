@@ -22,7 +22,7 @@
     <div class="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
         @foreach($galeris as $foto)
         <div class="break-inside-avoid rounded-2xl overflow-hidden shadow border border-surface-container group cursor-pointer relative"
-             onclick="openLightbox('{{ asset('storage/'.$foto->gambar) }}', '{{ $foto->judul }}')">
+             onclick="openLightbox(@js(asset('storage/'.$foto->gambar)), @js($foto->judul))">
             <img src="{{ asset('storage/'.$foto->gambar) }}" alt="{{ $foto->judul }}"
                  class="w-full object-cover group-hover:scale-105 transition-transform duration-500"/>
             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-end">

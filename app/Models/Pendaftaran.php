@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class Pendaftaran extends Model
 {
@@ -20,12 +22,56 @@ class Pendaftaran extends Model
 
     protected $casts = ['tanggal_lahir' => 'date'];
 
-    public static function generateKode(): string
+    public static function createWithGeneratedCode(array $attributes): self
     {
-        $prefix = 'SPMB' . date('Y');
-        $last = self::where('kode_daftar', 'like', $prefix . '%')->max('kode_daftar');
+        $attributes['tahun_ajaran'] ??= self::currentTahunAjaran();
+
+        for ($attempt = 1; $attempt <= 3; $attempt++) {
+            try {
+                return DB::transaction(function () use ($attributes) {
+                    $attributes['kode_daftar'] = self::generateKode(true);
+
+                    return self::create($attributes);
+                });
+            } catch (QueryException $exception) {
+                if ($attempt === 3 || ! self::isDuplicateCodeException($exception)) {
+                    throw $exception;
+                }
+            }
+        }
+
+        throw new \RuntimeException('Gagal membuat kode pendaftaran.');
+    }
+
+    public static function currentTahunAjaran(): string
+    {
+        $year = (int) now()->format('Y');
+        $startYear = (int) now()->format('n') >= 7 ? $year : $year - 1;
+
+        return $startYear . '/' . ($startYear + 1);
+    }
+
+    public static function generateKode(bool $lock = false): string
+    {
+        $prefix = 'SPMB' . now()->format('Y');
+        $query = self::where('kode_daftar', 'like', $prefix . '%')
+            ->orderByDesc('kode_daftar');
+
+        if ($lock) {
+            $query->lockForUpdate();
+        }
+
+        $last = $query->value('kode_daftar');
         $next = $last ? (intval(substr($last, -4)) + 1) : 1;
+
         return $prefix . str_pad($next, 4, '0', STR_PAD_LEFT);
+    }
+
+    private static function isDuplicateCodeException(QueryException $exception): bool
+    {
+        return str_contains($exception->getMessage(), 'pendaftarans_kode_daftar_unique')
+            || str_contains($exception->getMessage(), 'Duplicate entry')
+            || $exception->getCode() === '23000';
     }
 
     public function getLabelStatusAttribute(): string

@@ -2,36 +2,43 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        $adminEmail = env('SEED_ADMIN_EMAIL', 'admin@roudhotulilmi.sch.id');
+        $adminPassword = env('SEED_ADMIN_PASSWORD');
+        $kepalaEmail = env('SEED_KEPALA_EMAIL', 'kepala@roudhotulilmi.sch.id');
+        $kepalaPassword = env('SEED_KEPALA_PASSWORD');
+
+        if (! $adminPassword || ! $kepalaPassword) {
+            throw new \RuntimeException('Set SEED_ADMIN_PASSWORD dan SEED_KEPALA_PASSWORD di .env sebelum menjalankan UserSeeder.');
+        }
+
         User::updateOrCreate(
-            ['email' => 'admin@roudhotulilmi.sch.id'],
+            ['email' => $adminEmail],
             [
-                'name'     => 'Administrator',
-                'email'    => 'admin@roudhotulilmi.sch.id',
-                'password' => Hash::make('admin123'),
-                'role'     => 'admin',
+                'name' => 'Administrator',
+                'email' => $adminEmail,
+                'password' => Hash::make($adminPassword),
+                'role' => 'admin',
             ]
         );
 
-        // Akun demo tambahan
         User::updateOrCreate(
-            ['email' => 'kepala@roudhotulilmi.sch.id'],
+            ['email' => $kepalaEmail],
             [
-                'name'     => 'Ustadzah Nur Fadhilah',
-                'email'    => 'kepala@roudhotulilmi.sch.id',
-                'password' => Hash::make('kepala123'),
-                'role'     => 'admin',
+                'name' => 'Ustadzah Nur Fadhilah',
+                'email' => $kepalaEmail,
+                'password' => Hash::make($kepalaPassword),
+                'role' => 'admin',
             ]
         );
 
-        $this->command->info('✅ User admin berhasil dibuat.');
-        $this->command->info('   Email: admin@roudhotulilmi.sch.id | Password: admin123');
+        $this->command?->info('User admin berhasil dibuat.');
     }
 }

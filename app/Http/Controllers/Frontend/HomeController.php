@@ -14,7 +14,6 @@ use App\Http\Requests\Frontend\SpmbRequest;
 use App\Http\Requests\Frontend\SaranRequest;
 use App\Models\Pendaftaran;
 use App\Models\Saran;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -119,13 +118,12 @@ class HomeController extends Controller
     public function storeSpmb(SpmbRequest $request)
     {
         $validated = $request->validated();
-        $validated['kode_daftar'] = Pendaftaran::generateKode();
 
         if ($request->hasFile('foto_anak')) {
             $validated['foto_anak'] = $request->file('foto_anak')->store('pendaftaran', 'public');
         }
 
-        $pendaftaran = Pendaftaran::create($validated);
+        $pendaftaran = Pendaftaran::createWithGeneratedCode($validated);
 
         return redirect()->route('spmb.sukses', $pendaftaran->kode_daftar)
             ->with('success', 'Pendaftaran berhasil! Kode pendaftaran Anda: ' . $pendaftaran->kode_daftar);
