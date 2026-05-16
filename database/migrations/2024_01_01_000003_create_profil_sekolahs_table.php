@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('profil_sekolahs', function (Blueprint $table) {
             $table->id();
+
             // Identitas Sekolah
             $table->string('nama_sekolah')->default('KBTK & Rumah Tahfid Roudhotul Ilmi');
             $table->string('npsn')->nullable();
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->string('tahun_berdiri')->default('2010');
             $table->string('status')->default('Swasta');
             $table->string('jenjang')->default('PAUD/TK');
-            $table->text('alamat')->default('Jl. Jetis Kulon VIII No.19B, Surabaya');
+            $table->text('alamat')->nullable();
             $table->string('kelurahan')->default('Jetis Kulon');
             $table->string('kecamatan')->default('Wonocolo');
             $table->string('kabupaten_kota')->default('Surabaya');
@@ -32,10 +33,12 @@ return new class extends Migration
             $table->string('nama_yayasan')->default('Yayasan Pendidikan Islam Roudhotul Ilmi');
             $table->string('ketua_yayasan')->nullable();
             $table->string('foto_gedung')->nullable();
+
             // Visi & Misi
             $table->text('visi')->nullable();
             $table->text('misi')->nullable();
             $table->text('tujuan')->nullable();
+
             $table->timestamps();
         });
     }

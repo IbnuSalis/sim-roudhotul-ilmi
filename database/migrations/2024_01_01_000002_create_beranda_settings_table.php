@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama_kepala')->default('Ustadzah Nur Fadhilah, S.Pd.');
             $table->string('jabatan_kepala')->default('Kepala Yayasan');
             $table->string('foto_kepala')->nullable();
-            $table->text('quote_kepala')->default('Bismillah, kami berkomitmen menjadi mitra terbaik bagi orang tua dalam mendidik tunas-tunas bangsa.');
+            $table->text('quote_kepala')->nullable();
             $table->text('sambutan')->nullable();
             $table->integer('jumlah_guru')->default(8);
             $table->integer('jumlah_siswa')->default(120);
