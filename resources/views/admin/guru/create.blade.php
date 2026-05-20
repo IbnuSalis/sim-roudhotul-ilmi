@@ -32,6 +32,7 @@
                     <input type="number" name="urutan" value="{{ old('urutan', 0) }}" min="0" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary">
                 </div>
                 <div class="flex items-center gap-3 pt-6">
+                    <input type="hidden" name="aktif" value="0">
                     <input type="checkbox" name="aktif" id="aktif" value="1" {{ old('aktif', true) ? 'checked' : '' }} class="accent-primary w-4 h-4">
                     <label for="aktif" class="text-sm font-semibold text-gray-700">Tampilkan di website</label>
                 </div>

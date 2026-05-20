@@ -23,7 +23,7 @@ class GuruController extends Controller
     public function store(GuruRequest $request)
     {
         $validated = $request->validated();
-        $validated['aktif'] = $request->boolean('aktif', true);
+        $validated['aktif'] = $request->boolean('aktif');
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('guru', 'public');
@@ -43,7 +43,7 @@ class GuruController extends Controller
     public function update(GuruRequest $request, Guru $guru)
     {
         $validated = $request->validated();
-        $validated['aktif'] = $request->boolean('aktif', true);
+        $validated['aktif'] = $request->boolean('aktif');
 
         if ($request->hasFile('foto')) {
             if ($guru->foto) {

@@ -46,6 +46,7 @@
 
                 {{-- Aktif --}}
                 <div class="flex items-center gap-3 pt-6">
+                    <input type="hidden" name="aktif" value="0">
                     <input type="checkbox" name="aktif" id="aktif" value="1"
                            {{ old('aktif', $guru->aktif) ? 'checked' : '' }}
                            class="accent-primary w-4 h-4">
